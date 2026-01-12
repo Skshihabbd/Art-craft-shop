@@ -1,6 +1,6 @@
 import { Link, NavLink } from "react-router-dom";
 import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
-import { GrUserManager } from "react-icons/gr";
+import { PiSignInBold } from "react-icons/pi";
 import { useState } from "react";
 import Custom from "../custom/Custom";
 
@@ -84,9 +84,10 @@ const Navbar = () => {
             ) : (
               <Link
                 to="/signin"
-                className="hidden lg:block text-2xl text-gray-600 hover:text-[#AE9467]"
+                className="hidden lg:block text-2xl text-black hover:text-[#AE9467]"
               >
-                <GrUserManager />
+               <PiSignInBold />
+
               </Link>
             )}
 

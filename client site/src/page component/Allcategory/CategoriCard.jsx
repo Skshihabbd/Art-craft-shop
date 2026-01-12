@@ -4,7 +4,7 @@ const CategoriCard = ({ data }) => {
   const { price, _id, photourl, title } = data;
 
   return (
-    <div className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
+    <div className="group bg-white rounded-2xl  shadow-sm hover:shadow-xl transition-all duration-300">
       
       {/* Image */}
       <div className="relative h-56 overflow-hidden">

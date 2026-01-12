@@ -19,7 +19,9 @@ const Allcategory = () => {
           Explore products by your favorite categories
         </p>
       </div>
-
+          <div>
+             {datas.length===0 && <p className="text-2xl text-center">no product are available </p>}
+          </div>
       {/* Category Grid */}
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="

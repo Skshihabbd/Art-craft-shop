@@ -1,8 +1,11 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/bundle";
-import { Fade, Slide } from "react-awesome-reveal";
 import { EffectFade, Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Fade, Slide } from "react-awesome-reveal";
+
+import "swiper/css";
+import "swiper/css/effect-fade";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 const slides = [
   {
@@ -39,39 +42,39 @@ const Slider = () => {
   return (
     <section className="w-full">
       <Swiper
-        autoplay={{ delay: 3500, disableOnInteraction: false }}
+        modules={[EffectFade, Navigation, Pagination, Autoplay]}
         effect="fade"
         loop
         navigation
         pagination={{ clickable: true }}
-        modules={[EffectFade, Navigation, Pagination, Autoplay]}
-        className="h-[80vh]"
+        autoplay={{ delay: 3500, disableOnInteraction: false }}
+        className="h-[55vh] sm:h-[60vh] md:h-[65vh] lg:h-[80vh] rounded-3xl overflow-hidden"
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={index}>
             <div
-              className="relative h-[80vh] bg-cover bg-center flex items-center"
+              className="relative h-[55vh] sm:h-[60vh] md:h-[65vh] lg:h-[80vh] flex items-center bg-cover bg-center"
               style={{ backgroundImage: `url(${slide.image})` }}
             >
-              {/* Overlay */}
+              {/* overlay */}
               <div className="absolute inset-0 bg-black/50" />
 
-              {/* Content */}
-              <div className="relative z-10 max-w-7xl mx-auto px-6">
+              {/* content */}
+              <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
                 <Fade direction="up" triggerOnce>
-                  <h1 className="text-4xl lg:text-6xl font-semibold text-white mb-4 max-w-3xl">
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-semibold text-white mb-3 sm:mb-4 max-w-3xl">
                     {slide.title}
                   </h1>
                 </Fade>
 
                 <Slide direction="up" delay={200} triggerOnce>
-                  <p className="text-base lg:text-lg text-gray-200 max-w-2xl mb-6">
+                  <p className="text-sm sm:text-base lg:text-lg text-gray-200 max-w-2xl mb-4 sm:mb-6">
                     {slide.article}
                   </p>
                 </Slide>
 
                 <Slide direction="up" delay={400} triggerOnce>
-                  <button className="px-6 py-3 rounded-full bg-[#AE9467] text-white text-sm tracking-wide hover:opacity-90 transition">
+                  <button className="px-4 sm:px-6 py-2.5 sm:py-3 rounded-full bg-[#AE9467] text-white text-xs sm:text-sm tracking-wide hover:opacity-90 transition">
                     Explore Collection
                   </button>
                 </Slide>

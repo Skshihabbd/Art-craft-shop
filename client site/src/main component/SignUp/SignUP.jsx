@@ -1,209 +1,208 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { IoEyeOff } from "react-icons/io5";
-import { IoEye } from "react-icons/io5";
+import { IoEyeOff, IoEye } from "react-icons/io5";
 import Custom from "../../sharedcomponent/custom/Custom";
 import PageTitle from "../../sharedcomponent/page-title/PageTitle";
 
 const SignUP = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { SignUp, updateUser } = Custom();
-  const [error, setError] = useState(" ");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const loaction = useLocation();
+  const location = useLocation();
   const navigate = useNavigate();
-  console.log(SignUp);
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => {
-    const email = data.email;
-    const password = data.password;
-    const name = data.UserName;
-    const image = data.photourl;
 
-    console.log(email, password, name, image);
+  const onSubmit = async (data) => {
+    const { email, password, UserName, photourl } = data;
 
     try {
+      setError("");
       setLoading(true);
-      SignUp(email, password).then((result) => {
-        console.log(result.user);
-        updateUser(name, image).then((result) => {
-          console
-            .log("userupdated", result.user)
-            .catch((error) => console.log("user not updated", error.message));
-        });
 
-        if (result.user) {
-          navigate(loaction?.state ? location.state : "/");
-        }
+      const result = await SignUp(email, password);
 
-        reset();
-        setLoading(false);
-      });
-    } catch (errors) {
-      console.log(errors.message);
-      setError(errors.message);
+      if (!result?.user) {
+        throw new Error("Registration failed");
+      }
+
+      await updateUser(UserName, photourl);
+
+      reset();
+      navigate(location?.state?.from || "/");
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
-    <div className=" w-full h-screen    " >
-      <PageTitle title="Register-to see all details" />
-      <div className=" w-11/12  mx-auto  flex md:flex-row flex-col gap-5 md:gap-0 items-center justify-between my-5  ">
-        <div className="md:w-2/4 ">
-          <img
-            className="w-11/12 rounded-lg aspect-[7/6]"
-            src="/asset/image/arts and craft image.jpg"
-            alt=""
-          />
-        </div>
-        <div className="w-full md:w-[40%]  login-form-box-shadow rounded-xl  bg-gray-400 ">
-          <h1 className="text-center mb-5  text-xl open-sans-bold text-[var(--text-color)]">
-            Register your account
-          </h1>
-          <hr className="w-10/12 lg:w-9/12 h-[1px]  mx-auto " />
-          <div className="w-10/12 lg:w-9/12 mx-auto ">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
-              <div>
-                <label className="open-sans-bold text-[var(--text-color)]">Your Name</label>
+   <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center p-4 md:p-8">
+  <PageTitle title="Register your account" />
 
-                <input
-                  className="w-full input login-form-box-shadow placeholder:open-sans-regular placeholder:open-sans-regular"
-                  type="text"
-                  name="name"
-                  id="texts"
-                  placeholder="Enter your name"
-                  {...register("UserName", { required: true })}
-                />
-                {errors.UserName && (
-                  <span className="text-red-800">This field is required</span>
-                )}
-              </div>
-
-              <div>
-                <label className="open-sans-bold text-[var(--text-color)]">Photo Url </label>
-
-                <input
-                  className="w-full input login-form-box-shadow placeholder:open-sans-regular"
-                  type="url"
-                  name="url"
-                  id="urll"
-                  placeholder="Enter Photo URL"
-                  {...register("photourl", {
-                    required: "url is required",
-                  })}
-                />
-                {errors.photourl && (
-                  <span className="text-red-800">
-                    {errors.photourl.message}
-                  </span>
-                )}
-              </div>
-
-              <div>
-                <label className="open-sans-bold text-[var(--text-color)]">Email </label>
-
-                <input
-                  className="w-full input login-form-box-shadow placeholder:open-sans-regular"
-                  type="email"
-                  name="email"
-                  id="emails"
-                  required
-                  placeholder="Enter your email address"
-                  {...register("email", {
-                    required: "Email Address is required",
-                    pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                      message: "Please enter a valid email address",
-                    },
-                  })}
-                />
-                {errors.email && (
-                  <span className="text-red-800">{errors.email.message}</span>
-                )}
-              </div>
-
-              <div>
-                <label className="open-sans-bold text-[var(--text-color)]">Password</label>
-                <div className="relative">
-                  <input
-                    className="w-full input login-form-box-shadow placeholder:open-sans-regular"
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    id="passcode"
-                    placeholder="Enter your password"
-                    {...register("password", {
-                      required: "Password is required",
-                      minLength: {
-                        value: 8,
-                        message: "Password must be at least 8 characters",
-                      },
-                      maxLength: {
-                        value: 16,
-                        message: "Password must not exceed 16 characters",
-                      },
-
-                      pattern: {
-                        value:
-                          /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/,
-                        message:
-                          "Password must include at least one uppercase letter, one lowercase letter, and one number",
-                      },
-                    })}
-                  />
-                  <button type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className=" absolute  right-5 top-3 "
-                  >
-                    {showPassword ? (
-                      <IoEye className="text-black text-base" />
-                    ) : (
-                      <IoEyeOff className="text-base text-black" />
-                    )}
-                  </button>
-                </div>
-                {errors.password && (
-                  <span className="text-red-800">
-                    {errors.password.message}
-                  </span>
-                )}
-              </div>
-
-              <div>
-                <input
-                  type="checkbox"
-                  name="checkbox"
-                  id="check"
-                  {...register("checkbook", { required: true })}
-                />
-                <label className=" open-sans-bold text-[var(--text-color)]">
-                  Accept Term & Conditions
-                </label>
-
-                {errors.checkbook && (
-                  <span className="text-red-800">This field is required</span>
-                )}
-              </div>
-              <button className="w-full btn btn-secondary my-2 open-sans-bold text-white">
-                {loading ? <img className="animate-spin w-10 " src="asset/image/loading.png" /> : "Register"}
-              </button>
-            </form>
-            <p>{error}</p>
-            <p className="text-center text-black py-2">
-              <span className="pr-5 open-sans-bold text-white"> Have an account</span>
-              <Link to="/signin" className="open-sans-bold text-gray-700 hover:border-b-[2px] border-black ">
-                Login
-              </Link>
-            </p>
-          </div>
-        </div>
+  <div className="w-full max-w-6xl flex flex-col lg:flex-row items-center justify-center gap-12">
+    
+    {/* Left Image Section */}
+    <div className="hidden lg:block lg:w-1/2">
+      <div className="relative group">
+        <div className="absolute -inset-1 bg-gradient-to-r from-[#AE9467] to-slate-400 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+        <img
+          src="/asset/image/arts and craft image.jpg"
+          className="relative rounded-2xl shadow-2xl object-cover h-[600px] w-full"
+          alt="Register visual"
+        />
       </div>
     </div>
+
+    {/* Form Card Section */}
+    <div className="w-full max-w-md lg:w-1/2 bg-white border border-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.1)] rounded-[2rem] p-8 md:p-10 transition-all">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
+          Create Account
+        </h2>
+        <p className="text-gray-500 mt-2 font-medium">
+          Join us and explore all features
+        </p>
+      </div>
+
+      {/* Global Error */}
+      {error && (
+        <div className="mb-6 flex items-center gap-2 text-sm font-medium text-red-600 bg-red-50 p-4 rounded-xl border border-red-100">
+          <span className="w-1.5 h-1.5 rounded-full bg-red-600"></span>
+          {error}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        
+        {/* Name Input */}
+        <div className="space-y-1">
+          <label className="text-sm font-bold text-gray-700 ml-1">Your Name</label>
+          <input
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-secondary/10 focus:border-secondary outline-none transition-all duration-200"
+            placeholder="John Doe"
+            {...register("UserName", { required: "Name is required" })}
+          />
+          {errors.UserName && (
+            <p className="text-red-500 text-xs mt-1 ml-1 font-medium italic">
+              {errors.UserName.message}
+            </p>
+          )}
+        </div>
+
+        {/* Photo URL Input */}
+        <div className="space-y-1">
+          <label className="text-sm font-bold text-gray-700 ml-1">Photo URL</label>
+          <input
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-secondary/10 focus:border-secondary outline-none transition-all duration-200"
+            placeholder="https://example.com/photo.jpg"
+            {...register("photourl", { required: "Photo URL is required" })}
+          />
+          {errors.photourl && (
+            <p className="text-red-500 text-xs mt-1 ml-1 font-medium italic">
+              {errors.photourl.message}
+            </p>
+          )}
+        </div>
+
+        {/* Email Input */}
+        <div className="space-y-1">
+          <label className="text-sm font-bold text-gray-700 ml-1">Email</label>
+          <input
+            type="email"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-secondary/10 focus:border-secondary outline-none transition-all duration-200"
+            placeholder="example@email.com"
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "Invalid email address",
+              },
+            })}
+          />
+          {errors.email && (
+            <p className="text-red-500 text-xs mt-1 ml-1 font-medium italic">
+              {errors.email.message}
+            </p>
+          )}
+        </div>
+
+        {/* Password Input */}
+        <div className="space-y-1">
+          <label className="text-sm font-bold text-gray-700 ml-1">Password</label>
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50/50 focus:bg-white focus:ring-4 focus:ring-secondary/10 focus:border-secondary outline-none transition-all duration-200"
+              placeholder="********"
+              {...register("password", {
+                required: "Password is required",
+                minLength: { value: 8, message: "Minimum 8 characters" },
+              })}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-secondary transition-colors"
+            >
+              {showPassword ? <IoEye size={20} /> : <IoEyeOff size={20} />}
+            </button>
+          </div>
+          {errors.password && (
+            <p className="text-red-500 text-xs mt-1 ml-1 font-medium italic">
+              {errors.password.message}
+            </p>
+          )}
+        </div>
+
+        {/* Terms & Conditions */}
+        <div className="flex flex-col gap-1 py-1">
+          <div className="flex items-center gap-3 group cursor-pointer">
+            <input
+              type="checkbox"
+              id="terms"
+              className="w-4 h-4 rounded border-gray-300 text-secondary focus:ring-secondary cursor-pointer"
+              {...register("checkbook", { required: "You must accept terms" })}
+            />
+            <label htmlFor="terms" className="text-sm text-gray-600 cursor-pointer select-none">
+              I accept <span className="text-secondary font-semibold hover:underline">Terms & Conditions</span>
+            </label>
+          </div>
+          {errors.checkbook && (
+            <p className="text-red-500 text-xs font-medium italic">{errors.checkbook.message}</p>
+          )}
+        </div>
+
+        {/* Register Button */}
+        <button
+          disabled={loading}
+          className="group relative w-full py-3.5 px-4 bg-gray-900 text-white font-bold rounded-xl overflow-hidden transition-all duration-300 hover:bg-black active:scale-[0.98] disabled:opacity-70 disabled:pointer-events-none shadow-lg shadow-gray-200"
+        >
+          <span className="relative z-10">
+            {loading ? "Creating account..." : "Register"}
+          </span>
+        </button>
+      </form>
+
+      <p className="text-center text-[15px] mt-8 text-gray-500 font-medium">
+        Already have an account?
+        <Link to="/signin" className="text-secondary font-bold ml-2 hover:underline decoration-2 underline-offset-4">
+          Login
+        </Link>
+      </p>
+    </div>
+  </div>
+</div>
   );
 };
 
