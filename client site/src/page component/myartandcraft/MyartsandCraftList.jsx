@@ -31,7 +31,7 @@ const MyartsandCraftList = () => {
     try {
 
       const res = await fetch(
-        `http://localhost:5020/usersendcollections?email=${users.email}&category=${category}&skip=${reset ? 0 : skip}&limit=${limit}`
+        `https://server-site-wine.vercel.app/usersendcollections?email=${users.email}&category=${category}&skip=${reset ? 0 : skip}&limit=${limit}`
       );
       const resJson = await res.json();
       const { data = [], total = 0 } = resJson;
@@ -67,7 +67,7 @@ const MyartsandCraftList = () => {
     if (result.isConfirmed) {
       try {
         const res = await fetch(
-          `http://localhost:5020/usersenddata/${id}`,
+          `https://server-site-wine.vercel.app/usersenddata/${id}`,
           { method: "DELETE" }
         );
         const data = await res.json();

@@ -9,7 +9,7 @@ require("dotenv").config();
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // allow this origin
+    origin: "https://polite-salamander-337cb4.netlify.app", // allow this origin
     methods: "GET,POST,PUT,DELETE", // specify allowed methods if needed
     credentials: true, // if you need to allow cookies or other credentials
   })

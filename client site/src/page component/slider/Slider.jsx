@@ -1,6 +1,7 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectFade, Navigation, Pagination, Autoplay } from "swiper/modules";
 import { Fade, Slide } from "react-awesome-reveal";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 import "swiper/css";
 import "swiper/css/effect-fade";
@@ -45,7 +46,10 @@ const Slider = () => {
         modules={[EffectFade, Navigation, Pagination, Autoplay]}
         effect="fade"
         loop
-        navigation
+        navigation={{
+          prevEl: ".custom-prev",
+          nextEl: ".custom-next",
+        }}
         pagination={{ clickable: true }}
         autoplay={{ delay: 3500, disableOnInteraction: false }}
         className="h-[55vh] sm:h-[60vh] md:h-[65vh] lg:h-[80vh] rounded-3xl overflow-hidden"
@@ -82,6 +86,15 @@ const Slider = () => {
             </div>
           </SwiperSlide>
         ))}
+        <div className="absolute inset-0 z-20 flex items-center justify-between px-4 sm:px-8 pointer-events-none">
+          <button className="custom-prev pointer-events-auto w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/40 hover:bg-black/60 flex items-center justify-center text-white transition">
+            <FaChevronLeft size={18} />
+          </button>
+
+          <button className="custom-next pointer-events-auto w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/40 hover:bg-black/60 flex items-center justify-center text-white transition">
+            <FaChevronRight size={18} />
+          </button>
+        </div>
       </Swiper>
     </section>
   );

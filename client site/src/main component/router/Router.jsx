@@ -30,7 +30,7 @@ const router = createBrowserRouter([
         path: "/",
         element: <Home></Home>,
         loader: () =>
-          fetch("http://localhost:5020/adminsenddata"),
+          fetch("https://server-site-wine.vercel.app/adminsenddata"),
       },
       {
         path: "/homecard",
@@ -49,7 +49,7 @@ const router = createBrowserRouter([
         ),
         loader: ({ params }) =>
           fetch(
-            `http://localhost:5020/usersenddata/${params.id}`
+            `https://server-site-wine.vercel.app/usersenddata/${params.id}`
           ),
       },
 
@@ -68,7 +68,7 @@ const router = createBrowserRouter([
         </PrivetRoute>,
         loader: ({ params }) =>
           fetch(
-            `http://localhost:5020/usersenddata/${params.id}`
+            `https://server-site-wine.vercel.app/usersenddata/${params.id}`
           ),
       },
       {
@@ -80,7 +80,7 @@ const router = createBrowserRouter([
       {
         path: "/allart",
         element: <Allartandcraft></Allartandcraft>,
-        loader: () => fetch("http://localhost:5020/usersenddata"),
+        loader: () => fetch("https://server-site-wine.vercel.app/usersenddata"),
       },
       {
         path: "/myarts",
@@ -99,7 +99,7 @@ const router = createBrowserRouter([
         element: <Allcategory></Allcategory>,
         loader: ({ params }) =>
           fetch(
-            `http://localhost:5020/adminsendcollection?category=${params.categori}`
+            `https://server-site-wine.vercel.app/adminsendcollection?category=${params.categori}`
           ),
       },
     ],
