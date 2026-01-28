@@ -6,7 +6,6 @@ const PrivetRoute = ({children}) => {
 
     const { users, loader } = Custom()
     const location =useLocation()
-    console.log(location)
   
     if (loader) {
       return (

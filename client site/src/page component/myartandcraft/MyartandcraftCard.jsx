@@ -37,9 +37,7 @@ const MyartandcraftCard = ({ data, handleDelete }) => {
             {name}
           </h3>
 
-          <p className="text-xl font-bold text-emerald-600">
-            ৳ {price}
-          </p>
+          <p className="text-xl font-bold text-emerald-600">৳ {price}</p>
         </div>
 
         {/* Action Buttons */}

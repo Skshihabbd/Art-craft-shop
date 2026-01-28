@@ -30,9 +30,9 @@ async function run() {
   try {
     const userSendData = client.db("craftDatabase").collection("craftitem");
 
-    const adminSendData = client
-      .db("craftDatabase")
-      .collection("admincraftitem");
+    const adminSendData = client.db("craftDatabase").collection("admincraftitem");
+
+    
     app.get("/usersenddata", async (req, res) => {
       const allData = userSendData.find();
       const result = await allData.toArray();

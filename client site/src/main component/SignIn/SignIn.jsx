@@ -1,27 +1,24 @@
 /* eslint-disable react/no-unescaped-entities */
-/* eslint-disable no-unused-vars */
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 import Custom from "../../sharedcomponent/custom/Custom";
 import SocialLogin from "../../page component/SocialLogin/SocialLogin";
 import PageTitle from "../../sharedcomponent/page-title/PageTitle";
-import { IoEye, IoEyeOff } from "react-icons/io5";
+
+import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+
 const SignIn = () => {
-  const { SignIn, users } = Custom();
-  const [error, setError] = useState(null);
+  const { SignIn } = Custom();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { shihab } = Custom();
-  console.log(shihab);
-  console.log(location);
-  const [success, setSuccess] = useState(null);
   const {
     register,
     handleSubmit,
@@ -29,118 +26,151 @@ const SignIn = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    const email = data.email;
-    const password = data.password;
-    console.log(email, password);
+  const onSubmit = async (data) => {
+    const { email, password } = data;
     try {
       setLoading(true);
-      SignIn(email, password).then((result) => {
-        console.log(result.user);
-        setSuccess(toast("login successfull"));
-        reset();
-        navigate(location?.state ? location.state : "/");
-        setLoading(false);
-      });
-    } catch (errores) {
-      console.log(errores.message);
-      setError(toast("user Information is wrong"));
+      await SignIn(email, password);
+      toast.success("Welcome back!");
+      reset();
+      navigate(location?.state || "/");
+    } catch (error) {
+      toast.error("Authentication failed. Please check your credentials.");
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
-    <div className=" w-full min-h-screen  bg-[url('https://thumbs.dreamstime.com/b/abstract-pastel-colors-dripping-paint-background-artistic-concept-320518103.jpg')] flex justify-center items-center  ">
-      <PageTitle title="Login-form" />
+    <div className="min-h-screen flex items-center justify-center bg-[#f8fafc] px-4">
+      <PageTitle title="Sign In" />
 
-      <div className=" md:w-[55%] lg:w-[35%] mx-auto login-form-box-shadow py-3 bg-gray-400 rounded-xl">
-        <h1 className="text-center mb-3 open-sans-bold text-xl text-white">
-          Login your account
-        </h1>
-        <hr className="w-8/12 h-[1px] bg-black mx-auto mb-6" />
-        <div className=" w-10/12 mx-auto ">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-            <div>
-              <label className=" open-sans-bold text-white">Email </label>
+      {/* Background Decorative Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] rounded-full bg-indigo-50/50 blur-3xl" />
+        <div className="absolute top-[60%] -right-[5%] w-[30%] h-[30%] rounded-full bg-rose-50/50 blur-3xl" />
+      </div>
 
+      <div className="relative w-full max-w-md">
+        <div className="bg-white/80 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[2rem] p-10">
+          {/* Header */}
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-semibold tracking-tight text-slate-900 mb-2">
+              Sign In
+            </h2>
+            <p className="text-slate-500 text-sm">
+              Enter your details to access your account
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Email Field */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold uppercase tracking-wider text-slate-500 ml-1">
+                Email Address
+              </label>
               <input
-                className="w-full input login-form-box-shadow placeholder:open-sans-regular placeholder:text-black "
                 type="email"
-                name="email"
-                id="emails"
-                required
-                placeholder="Enter your email address "
-                {...register("email", { required: true })}
+                placeholder="name@company.com"
+                className={`w-full px-4 py-3 rounded-xl bg-slate-50 border ${errors.email ? "border-red-300" : "border-slate-100"} focus:bg-white focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500 transition-all duration-200 outline-none text-slate-700`}
+                {...register("email", { required: "Email is required" })}
               />
               {errors.email && (
-                <span className="text-red-600">This field is required</span>
+                <p className="text-[11px] text-red-500 font-medium ml-1">
+                  {errors.email.message}
+                </p>
               )}
             </div>
 
-            <div className="relative">
-              <div className="flex justify-between">
-                <label className="open-sans-bold text-white">Password</label>
-                <button type="button" className="text-black">
-                  Forgot Password
+            {/* Password Field */}
+            <div className="space-y-1.5">
+              <div className="flex justify-between items-center ml-1">
+                <label className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                  Password
+                </label>
+                <button
+                  type="button"
+                  className="text-xs font-medium text-indigo-600 hover:text-indigo-700"
+                >
+                  Forgot?
                 </button>
               </div>
-
-              <input
-                className="w-full input login-form-box-shadow placeholder:open-sans-regular placeholder:text-black "
-                type={showPassword ? "text" : "password"}
-                name="password"
-                id="passcode"
-                required
-                placeholder="Enter your password"
-                {...register("password", { required: true })}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className=" absolute  right-5 top-10 "
-              >
-                {showPassword ? (
-                  <IoEye className="text-black text-base" />
-                ) : (
-                  <IoEyeOff className="text-base text-black" />
-                )}
-              </button>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  className={`w-full px-4 py-3 rounded-xl bg-slate-50 border ${errors.password ? "border-red-300" : "border-slate-100"} focus:bg-white focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500 transition-all duration-200 outline-none text-slate-700`}
+                  {...register("password", {
+                    required: "Password is required",
+                  })}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  {showPassword ? (
+                    <IoEyeOffOutline size={20} />
+                  ) : (
+                    <IoEyeOutline size={20} />
+                  )}
+                </button>
+              </div>
               {errors.password && (
-                <span className="text-red-600">This field is required</span>
+                <p className="text-[11px] text-red-500 font-medium ml-1">
+                  {errors.password.message}
+                </p>
               )}
-              <p>{error}</p>
             </div>
 
-            <button type="submit" className="w-full btn btn-secondary my-3 ">
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3.5 rounded-xl bg-slate-900 text-white font-medium hover:bg-slate-800 transform active:scale-[0.98] transition-all duration-200 disabled:opacity-70 disabled:pointer-events-none shadow-lg shadow-slate-200"
+            >
               {loading ? (
-                <img
-                  className="animate-spin w-10 "
-                  src="asset/image/loading.png"
-                />
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Signing in...
+                </span>
               ) : (
-                "Login"
+                "Sign In"
               )}
             </button>
           </form>
 
-          {users ? (
-            <p> {success} </p>
-          ) : (
-            <p className="text-center open-sans-bold my-3 text-white">
-              Don't have an account
-              <Link
-                to="/signup"
-                className="text-gray-700 ml-3 hover:border-b-[2px] border-black"
-              >
-                Register
-              </Link>
-            </p>
-          )}
-        </div>
-        <p className="py-2 text-center open-sans-bold text-white">Or</p>
-        <div className=" flex justify-center w-10/12 mx-auto">
-          <SocialLogin></SocialLogin>
+          {/* Divider */}
+          <div className="relative my-8">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-100"></div>
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white px-4 text-slate-400 tracking-widest font-medium">
+                Or continue with
+              </span>
+            </div>
+          </div>
+
+          {/* Social Login Section */}
+          <div className="mt-6">
+            <SocialLogin />
+          </div>
+
+          {/* Footer Link */}
+          <p className="text-center text-sm text-slate-500 mt-8">
+            New here?
+            <Link
+              to="/signup"
+              className="ml-1.5 font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
+            >
+              Create an account
+            </Link>
+          </p>
         </div>
       </div>
-      <ToastContainer />
+
+      <ToastContainer position="bottom-right" hideProgressBar />
     </div>
   );
 };
