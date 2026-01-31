@@ -11,6 +11,8 @@ const Categorycard = ({ data }) => {
         <img
           src={photourl}
           alt={categories}
+          loading="lazy" 
+         
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110 will-change-transform"
         />
 
