@@ -1,14 +1,17 @@
 import { Suspense, lazy } from "react";
 import { useLoaderData } from "react-router-dom";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const Navbar = lazy(() => import("../../sharedcomponent/navbar/Navbar"));
 const Footer = lazy(() => import("../../sharedcomponent/footer/Footer"));
-const TiTleMenu = lazy(() => import("../../sharedcomponent/menu title/TiTleMenu"));
+const TiTleMenu = lazy(
+  () => import("../../sharedcomponent/menu title/TiTleMenu"),
+);
 const Slider = lazy(() => import("../slider/Slider"));
 const Categorycard = lazy(() => import("./Categorycard"));
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/autoplay";
@@ -28,16 +31,12 @@ export const NavbarSkeleton = () => {
   );
 };
 
-
 export const TitleMenuSkeleton = () => {
   return (
     <div className="bg-white border-b py-4 animate-pulse">
       <div className="max-w-7xl mx-auto px-4 flex gap-6">
         {[1, 2, 3, 4, 5].map((i) => (
-          <div
-            key={i}
-            className="h-5 w-20 bg-gray-200 rounded"
-          />
+          <div key={i} className="h-5 w-20 bg-gray-200 rounded" />
         ))}
       </div>
     </div>
@@ -60,9 +59,6 @@ const SliderSkeleton = () => {
     </div>
   );
 };
-
-
-
 
 export const CategorySectionSkeleton = () => {
   return (
@@ -105,7 +101,6 @@ export const FooterSkeleton = () => {
   );
 };
 
-
 const TopInfoBarSkeleton = () => {
   return (
     <div className="py-2 bg-[#AE9467]/70 animate-pulse flex justify-center">
@@ -120,14 +115,13 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-[#faf9f7]">
       {/* Top Info Bar */}
-      
 
       <Suspense fallback={<TopInfoBarSkeleton />}>
         <div className="bg-[#AE9467] text-white text-center text-sm py-2 tracking-wide">
-        We ship nationwide · 30-day return policy · Free shipping on orders over
-        $75
-      </div>
-        </Suspense>
+          We ship nationwide · 30-day return policy · Free shipping on orders
+          over $75
+        </div>
+      </Suspense>
 
       {/* Navbar */}
       <div className="sticky top-0 z-50">
@@ -151,40 +145,54 @@ const Home = () => {
       </section>
 
       {/* Category Section */}
-       <Suspense fallback={<CategorySectionSkeleton />}>
-      <section className="max-w-7xl mx-auto px-4 py-12">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-semibold text-gray-800">
-            Craft Categories
-          </h1>
-          <span className="text-sm text-gray-500">
-            Explore handmade collections
-          </span>
-        </div>
+      <Suspense fallback={<CategorySectionSkeleton />}>
+        <section className="max-w-7xl mx-auto px-4 py-12">
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-3xl font-semibold text-gray-800">
+              Craft Categories
+            </h1>
+            <span className="text-sm text-gray-500">
+              Explore handmade collections
+            </span>
+          </div>
 
-       
-          <Swiper
-            modules={[Autoplay]}
-            spaceBetween={24}
-            slidesPerView="auto"
-            loop
-            autoplay={{
-              delay: 0,
-              disableOnInteraction: false,
-              pauseOnMouseEnter: true,
-            }}
-            speed={4000}
-            className="pb-4"
-          >
-            {datas?.map((data) => (
-              <SwiperSlide key={data._id} className="!w-[260px] py-10">
-                <Categorycard data={data} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        
-      </section>
-</Suspense>
+          <div>
+            <Swiper
+              modules={[Autoplay, Navigation, Pagination]}
+              spaceBetween={24}
+              slidesPerView="auto"
+              loop
+              navigation={{
+                prevEl: ".custom-prev",
+                nextEl: ".custom-next",
+              }}
+              autoplay={{
+                delay: 0,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+              }}
+              speed={2000}
+              className="pb-4"
+            >
+              {datas?.map((data) => (
+                <SwiperSlide key={data._id} className="!w-[260px] py-10">
+                  <Categorycard data={data} />
+                </SwiperSlide>
+              ))}
+
+              <div className="absolute inset-0 z-20 flex items-center justify-between px-4 sm:px-8 pointer-events-none">
+                <button className="custom-prev pointer-events-auto w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/80 hover:bg-black/60 flex items-center justify-center text-white transition">
+                  <FaChevronLeft size={18} />
+                </button>
+
+                <button className="custom-next pointer-events-auto w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/80 hover:bg-black/60 flex items-center justify-center text-white transition">
+                  <FaChevronRight size={18} />
+                </button>
+              </div>
+            </Swiper>
+          </div>
+        </section>
+      </Suspense>
       {/* Footer */}
       <Suspense fallback={<FooterSkeleton />}>
         <Footer />
@@ -194,4 +202,3 @@ const Home = () => {
 };
 
 export default Home;
-
