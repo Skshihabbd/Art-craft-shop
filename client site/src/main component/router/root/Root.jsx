@@ -17,12 +17,14 @@ const navigation = useNavigation();
       preloader.style.display = "none"; // loading শেষ হলে hide
     }
   }, [loading]);
+  if (isLoading) {
+    return <GlobalLoader />;
+  }
 
   return (
     <div>
-      {isLoading && <GlobalLoader />}
-      {loading && <GlobalLoader />}
-      {!loading && <Outlet />}
+      
+       <Outlet />
     </div>
   );
 };

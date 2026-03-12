@@ -39,7 +39,7 @@ const SignUP = () => {
 
       if (res.data.success) {
         const uploadedPhotoURL = res.data.data.display_url;
-
+console.log("image url",uploadedPhotoURL);
         const result = await SignUp(data.email, data.password);
 
         if (!result?.user) {
